@@ -1,0 +1,26 @@
+{
+  "name": "personal-budget-tracker",
+  "version": "1.0.0",
+  "description": "\"this appliation tracks personal income\"",
+  "main": "server.js",
+  "scripts": {
+    "dev":"nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "\"MERN_APP_PERSONAL_BUDGET_TRACKER\""
+  ],
+  "type": "module",
+  "author": "umashankar",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.7"
+  }
+}
