@@ -5,6 +5,10 @@ export const register = async (req, res) => {
   try {
     const { username, email, password,confirmPassword } = req.body;
 
+    
+
+    
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -16,7 +20,8 @@ export const register = async (req, res) => {
       username,
       email,
       password,
-      confirmPassword
+      confirmPassword,
+      photo: req.file.path,
     });
 
     // Save user to database
@@ -29,6 +34,7 @@ export const register = async (req, res) => {
         id: savedUser._id,
         username: savedUser.username,
         email: savedUser.email,
+        photo: savedUser.photo,
       },
     });
   } catch (error) {
@@ -42,8 +48,8 @@ export const login = async (req, res) => {
 
     // Check if user exists
     // Check if password is correct
-    const user = await User.findOne({ email });
-    if (!user) {
+    const user = await User.findOne({ email }).select('+password');    
+    if (!user || !(await user.matchPassword(password, user.password))) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 

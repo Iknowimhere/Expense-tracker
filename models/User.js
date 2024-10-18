@@ -1,5 +1,5 @@
-
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -23,7 +23,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: [8, 'Password must be at least 8 characters long'],
-    select: false
+    select: false,
+    validate:{
+      validator:function(value){
+        return value===this.confirmPassword
+      },
+      message:'Password and confirm password must be same'
+    }
   },
   confirmPassword: {
     type: String,
@@ -31,7 +37,16 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+userSchema.pre('save',async function(next){
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password,salt);
+  this.confirmPassword = undefined;
+  next();
+})
 
+userSchema.methods.matchPassword = async function(pwd,pwdDb){
+  return await bcrypt.compare(pwd,pwdDb);
+}
 
 const User = mongoose.model('User', userSchema);
 
