@@ -3,11 +3,9 @@ import { genToken } from '../utils/genToken.js';
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password,confirmPassword } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
-    
-
-    
+    console.log(req.body);
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -48,7 +46,7 @@ export const login = async (req, res) => {
 
     // Check if user exists
     // Check if password is correct
-    const user = await User.findOne({ email }).select('+password');    
+    const user = await User.findOne({ email }).select('+password');
     if (!user || !(await user.matchPassword(password, user.password))) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
