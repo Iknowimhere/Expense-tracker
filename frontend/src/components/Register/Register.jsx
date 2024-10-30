@@ -42,6 +42,7 @@ const Register = () => {
   let [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
+
   const handleForm = (e) => {
     e.preventDefault();
     let { name, value } = e.target;
@@ -91,7 +92,7 @@ const Register = () => {
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity='success'
@@ -100,7 +101,7 @@ const Register = () => {
         >
           Registration successfull
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
           Register

@@ -19,7 +19,7 @@ export const register = async (req, res) => {
       email,
       password,
       confirmPassword,
-      photo: req.file.path,
+      photo: req.file?.path,
     });
 
     // Save user to database
@@ -32,7 +32,7 @@ export const register = async (req, res) => {
         id: savedUser._id,
         username: savedUser.username,
         email: savedUser.email,
-        photo: savedUser.photo,
+        photo: savedUser?.photo,
       },
     });
   } catch (error) {
@@ -47,6 +47,8 @@ export const login = async (req, res) => {
     // Check if user exists
     // Check if password is correct
     const user = await User.findOne({ email }).select('+password');
+    console.log(user);
+
     if (!user || !(await user.matchPassword(password, user.password))) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
