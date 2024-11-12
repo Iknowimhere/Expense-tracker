@@ -1,10 +1,11 @@
-import dotenv from 'dotenv';
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import transactionRoutes from "./routes/transactionRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import { connectDB } from "./config/db.js";
+
 dotenv.config();
-import express from 'express';
-import { connectDB } from './config/db.js';
-import userRoutes from './routes/userRoutes.js';
-import profileRoutes from './routes/profileRoutes.js';
-import cors from 'cors';
 let app = express();
 connectDB();
 
@@ -14,6 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoutes);
-app.use('/', profileRoutes);
+app.use("/api/transaction",transactionRoutes)
 
 export default app;
