@@ -2,7 +2,7 @@ import Transaction from "../models/Transaction.js";
 
 const getTransactions=async (req,res,next)=>{
     try {
-        const transactions=await Transaction.find({user:req.user}).sort({date:-1})
+        const transactions=await Transaction.find({user:req.user}).sort({date:-1}).populate("user")
         res.status(200).json(transactions)
     } catch (error) {
         res.status(500).json({message:error.message})

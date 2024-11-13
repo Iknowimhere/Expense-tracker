@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { deleteTransaction, getTransactions, postTransaction, updateTransaction } from "../controllers/transactionControllers";
-import { auth } from "../middlewares/auth";
+import { deleteTransaction, getTransactions, postTransaction, updateTransaction } from "../controllers/transactionControllers.js";
+import { auth } from "../middlewares/auth.js";
 
 let router=Router();
 

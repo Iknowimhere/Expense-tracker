@@ -1,9 +1,10 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 export const auth = async (req, res, next) => {
   try {
-    let token = req.headers.authorization.token;
+    
+    let token = req.headers.authorization.split(" ")[1];
     if (!token) {
       res.status(401).json({
         message: 'Please Login',
