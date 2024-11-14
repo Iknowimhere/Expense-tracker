@@ -32,6 +32,10 @@ const budgetSchema=new mongoose.Schema({
             'Debt Repayment',
             'Miscellaneous'
           ]
+    },
+    currentSpent:{
+        type:Number,
+        default:0
     }
 },{
     timestamps:true

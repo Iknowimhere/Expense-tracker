@@ -1,3 +1,4 @@
+import budgetRoutes from "./routes/budgetRoutes.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -16,5 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoutes);
 app.use("/api/transaction",transactionRoutes)
+app.use("/api/budget",budgetRoutes)
 
 export default app;
