@@ -1,3 +1,17 @@
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Input from "@mui/material/Input";
+import Snackbar from "@mui/material/Snackbar";
+import axios from "axios";
+import bg from "../../assets/bg.png";
+import instance from "../../axios";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   ButtonGroup,
@@ -8,17 +22,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import bg from '../../assets/bg.png';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -40,8 +43,9 @@ const Register = () => {
     confirmPassword: '',
   });
   let [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   let navigate = useNavigate();
+
+
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -56,11 +60,9 @@ const Register = () => {
 
   const register = async () => {
     try {
-      console.log(formData);
-
       setLoading(true);
       let response = await axios.post(
-        'http://localhost:5000/api/user/register',
+        `${instance.defaults.baseURL}/user/register`,
         formData,
         {
           headers: {
@@ -68,18 +70,17 @@ const Register = () => {
           },
         }
       );
-      console.log(response);
-      setOpen(true);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       navigate('/dashboard');
     } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+
   return (
     <Box
       sx={{
@@ -89,19 +90,11 @@ const Register = () => {
         display: 'flex',
         justifyContent: 'end',
         height: '100vh',
+        position:'relative',
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
-      {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity='success'
-          variant='filled'
-          sx={{ width: '100%' }}
-        >
-          Registration successfull
-        </Alert>
-      </Snackbar> */}
+      <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
           Register
@@ -168,7 +161,7 @@ const Register = () => {
               fullWidth
               onClick={register}
             >
-              Signup
+              {loading?<CircularProgress color="white"/>:"Signup"}
             </Button>
           </ButtonGroup>
         </Stack>

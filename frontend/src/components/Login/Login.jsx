@@ -1,6 +1,17 @@
+import Box from "@mui/material/Box";
+import Input from "@mui/material/Input";
+import axios from "axios";
+import bg from "../../assets/bg.png";
+import instance from "../../axios";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   ButtonGroup,
+  CircularProgress,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -8,12 +19,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import bg from '../../assets/bg.png';
-import { Link } from 'react-router-dom';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -28,6 +33,32 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Login = () => {
+  let [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  let [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    let { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const login=async ()=>{
+    setLoading(true)
+    try {
+      let response=await axios.post(`${instance.defaults.baseURL}/user/login`,formData)
+      localStorage.setItem('token',response.data.token)
+      localStorage.setItem('user',JSON.stringify(response.data.user))
+      navigate('/dashboard')
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setLoading(false)
+    }
+  }
   return (
     <Box
       sx={{
@@ -37,9 +68,12 @@ const Login = () => {
         display: 'flex',
         justifyContent: 'end',
         height: '100vh',
+        position:'relative',
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
+    <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
+
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
           Login
@@ -47,18 +81,18 @@ const Login = () => {
         <Stack>
           <FormControl sx={{ marginBottom: '1em' }}>
             <InputLabel htmlFor='email'>Email</InputLabel>
-            <Input id='email' />
+            <Input id='email' value={formData.email} onChange={handleForm} name='email' />
           </FormControl>
           <FormControl sx={{ marginBottom: '1em' }}>
             <InputLabel htmlFor='password'>Password</InputLabel>
-            <Input id='password' />
+            <Input id='password' value={formData.password} onChange={handleForm} name='password' />
           </FormControl>
           <FormHelperText>
             Not Registered Yet? <Link to='/'>Please Register</Link>
           </FormHelperText>
           <ButtonGroup sx={{ display: 'flex', gap: '1em' }}>
-            <Button variant='contained' color='primary' fullWidth>
-              Login
+            <Button variant='contained' color='primary' fullWidth onClick={login}>
+              {loading ? <CircularProgress color="white"/> : 'Login'}
             </Button>
           </ButtonGroup>
         </Stack>
