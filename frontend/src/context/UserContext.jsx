@@ -3,10 +3,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 export let UserContext = createContext();
 
 export let UserProvider = ({ children }) => {
-  let [user, setUser] = useState(null);
+  let [user, setUser] = useState(()=>{
+    let user = JSON.parse(localStorage.getItem("user"));
+    return user;
+  });
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem("user"));
+    
     if (user) {
       setUser(user);
     }
