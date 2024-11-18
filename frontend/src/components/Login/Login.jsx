@@ -50,7 +50,6 @@ const Login = () => {
     setLoading(true)
     try {
       let response=await axios.post(`${instance.defaults.baseURL}/user/login`,formData)
-      localStorage.setItem('token',response.data.token)
       localStorage.setItem('user',JSON.stringify(response.data.user))
       navigate('/dashboard')
     } catch (error) {

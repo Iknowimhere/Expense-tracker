@@ -25,12 +25,12 @@ export const register = async (req, res) => {
     let token = genToken(savedUser._id);
 
     res.status(201).json({
-      token,
       user: {
         id: savedUser._id,
         username: savedUser.username,
         email: savedUser.email,
         photo: savedUser?.photo,
+        token
       },
     });
   } catch (error) {
@@ -54,12 +54,12 @@ export const login = async (req, res) => {
     //generate token
     let token = genToken(user._id);
     res.status(200).json({
-      token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
         photo: user?.photo,
+        token
       },
     });
   } catch (error) {
