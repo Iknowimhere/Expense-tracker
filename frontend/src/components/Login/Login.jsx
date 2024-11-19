@@ -84,7 +84,7 @@ const Login = () => {
           </FormControl>
           <FormControl sx={{ marginBottom: '1em' }}>
             <InputLabel htmlFor='password'>Password</InputLabel>
-            <Input id='password' value={formData.password} onChange={handleForm} name='password' />
+            <Input id='password' value={formData.password} onChange={handleForm} name='password' type="password" />
           </FormControl>
           <FormHelperText>
             Not Registered Yet? <Link to='/'>Please Register</Link>

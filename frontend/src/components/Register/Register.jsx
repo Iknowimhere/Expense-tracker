@@ -124,6 +124,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleForm}
               name='password'
+              type="password"
             />
           </FormControl>
           <FormControl sx={{ marginBottom: '1em' }}>
@@ -133,6 +134,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleForm}
               name='confirmPassword'
+              type="password"
             />
           </FormControl>
           <Button

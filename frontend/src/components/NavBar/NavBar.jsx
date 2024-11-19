@@ -6,20 +6,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
+import LogoutIcon from "@mui/icons-material/Logout";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 function NavBar({user,setUser}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-console.log(user)
+  let navigate=useNavigate()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -34,6 +34,12 @@ console.log(user)
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const logout=()=>{
+    localStorage.removeItem("user")
+    setUser(null)
+    navigate("/login")
+  }
 
   return (
     <AppBar position="static">
@@ -144,8 +150,11 @@ console.log(user)
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+                <MenuItem>
+                  <Typography sx={{ textAlign: 'center' }}>{user.username.toUpperCase()}</Typography>
+                </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{user.username}</Typography>
+                <Button onClick={logout} endIcon={<LogoutIcon/>}>Logout</Button>
                 </MenuItem>
             </Menu>
           </Box>
