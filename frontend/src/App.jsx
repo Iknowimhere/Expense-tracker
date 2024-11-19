@@ -1,8 +1,9 @@
-import { Box } from '@mui/material';
-import Register from './components/Register/Register';
-import Login from './components/Login/Login';
-import { Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
+import Budget from "./components/Budget/Budget";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
+import Transaction from "./components/Transaction/Transaction";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
@@ -10,7 +11,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Register />} />
         <Route path='login' element={<Login />} />
-        <Route path='dashboard' element={<Dashboard />} />
+        <Route path='dashboard' element={<Dashboard />} >
+          <Route path="transaction" element={<Transaction/>}/>
+          <Route path="budget" element={<Budget/>}/>
+        </Route>
       </Routes>
     </div>
   );

@@ -1,5 +1,6 @@
 import NavBar from "../NavBar/NavBar";
 import React, { useContext } from "react";
+import { Outlet } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 
 const Dashboard = () => {
@@ -7,6 +8,8 @@ const Dashboard = () => {
   
   return<div>
   <NavBar user={user} setUser={setUser}/>
+
+  <Outlet/>
   </div>
 }
 
