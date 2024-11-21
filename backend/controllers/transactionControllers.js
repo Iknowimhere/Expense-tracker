@@ -10,12 +10,13 @@ const getTransactions=async (req,res,next)=>{
 }
 
 const postTransaction=async (req,res,next)=>{
-    let {amount,category,type}=req.body
+    let {amount,category,type,description}=req.body
     try {
         let newTransaction=new Transaction({
             user:req.user,
             amount,
             category,
+            description,
             type
         })
         await newTransaction.save()

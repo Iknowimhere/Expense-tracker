@@ -14,6 +14,10 @@ const transactionSchema=new mongoose.Schema({
         type:String,
         enum:["Income","Expense"]
     },
+    description:{
+        type:String,
+        required:[true,"description field is required"]
+    },
     date:{
         type:Date,
         default:Date.now()
