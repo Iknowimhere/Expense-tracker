@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import React, { useContext, useEffect, useState } from "react";
+import Skeleton from "@mui/material/Skeleton";
 import TransactionDialog from "./TransactionDialog";
 import axios from "../../axios";
 import { UserContext } from "../../context/UserContext";
@@ -73,33 +74,40 @@ const Transaction = () => {
       </Box>
 
       <Paper elevation={3}>
-        <List>
-          {transactions?.map((transaction,index) => (
-            <React.Fragment key={transaction._id}>
-              <ListItem>
-                <ListItemText
-                  primary={transaction.description}
-                  secondary={new Date(transaction.date).toLocaleDateString()}
-                />
-                <Typography
-                  variant="body1"
-                  color={transaction.type === "Expense" ? "error" : "success"}
-                >
-                  {transaction.type === "Expense" ? "- " : "+ "} ₹{transaction.amount}
-                </Typography>
-              </ListItem>
-              {index < transactions.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-          {transactions.length === 0 && (
+       {loading?( <Box fullwidth padding={2}>
+        <Skeleton animation="wave" height={50}/>
+        <Skeleton animation="wave" height={50}/>
+        <Skeleton animation="wave" height={50}/>
+        <Skeleton animation="wave" height={50}/>
+        <Skeleton animation="wave" height={50}/>
+        <Skeleton animation="wave" height={50}/>
+      </Box>):( <List>
+        {transactions?.map((transaction,index) => (
+          <React.Fragment key={transaction._id}>
             <ListItem>
               <ListItemText
-                primary="No transactions found"
-                secondary="Add a new transaction to get started"
+                primary={transaction.description}
+                secondary={new Date(transaction.date).toLocaleDateString()}
               />
+              <Typography
+                variant="body1"
+                color={transaction.type === "Expense" ? "error" : "success"}
+              >
+                {transaction.type === "Expense" ? "- " : "+ "} ₹{transaction.amount}
+              </Typography>
             </ListItem>
-          )}
-        </List>
+            {index < transactions.length - 1 && <Divider />}
+          </React.Fragment>
+        ))}
+        {transactions.length === 0 && (
+          <ListItem>
+            <ListItemText
+              primary="No transactions found"
+              secondary="Add a new transaction to get started"
+            />
+          </ListItem>
+        )}
+      </List>)}
       </Paper>
     </Box>
   );
