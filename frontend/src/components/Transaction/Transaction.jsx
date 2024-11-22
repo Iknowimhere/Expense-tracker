@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import React, { useContext, useEffect, useState } from "react";
+import TransactionDialog from "./TransactionDialog";
 import axios from "../../axios";
 import { UserContext } from "../../context/UserContext";
 
@@ -15,10 +16,18 @@ import {
 } from "@mui/material";
 
 const Transaction = () => {
+  // Add this state
+  const [openDialog, setOpenDialog] = useState(false);
+
+
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const {user,setUser}=useContext(UserContext)
 
+
+    // Add these handlers
+    const handleOpenDialog = () => setOpenDialog(true);
+    const handleCloseDialog = () => setOpenDialog(false);
   const fetchTransactions = async () => {
     try {
       setLoading(true);
@@ -43,6 +52,12 @@ const Transaction = () => {
 
   return (
     <Box sx={{ maxWidth: 600, margin: "0 auto", padding: 3 }}>
+    <TransactionDialog
+    open={openDialog}
+    handleClose={handleCloseDialog}
+    fetchTransactions={fetchTransactions}
+    user={user}
+  />
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h5" component="h2">
           Recent Transactions
@@ -51,6 +66,7 @@ const Transaction = () => {
           variant="contained"
           startIcon={<AddIcon />}
           color="primary"
+          onClick={handleOpenDialog}
         >
           Add Transaction
         </Button>
