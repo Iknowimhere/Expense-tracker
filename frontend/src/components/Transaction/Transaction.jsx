@@ -60,7 +60,7 @@ const Transaction = () => {
         fetchTransactions={fetchTransactions}
         user={user}
       />
-      <Paper elevation={3} sx={{ p: 3, mb: 3, backgroundColor: '#f5f5f5' }}>
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Stack direction="row" spacing={1} alignItems="center">
             <AttachMoneyIcon sx={{ fontSize: 35, color: 'primary.main' }} />

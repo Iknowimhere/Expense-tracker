@@ -39,7 +39,7 @@ const Budget = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4,backgroundColor: '#f5f5f5',padding: '20px',borderRadius: '10px',boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#2c3e50' }}>
           <AccountBalanceWalletIcon sx={{ mr: 1, verticalAlign: 'bottom', fontSize: 35 }} />
