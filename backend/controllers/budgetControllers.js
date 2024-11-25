@@ -24,7 +24,12 @@ const postBudget = async (req, res) => {
     }
    
     let totalIncome=transactions.reduce((total,transaction)=>{
-      total+=transaction.amount;
+      if(transaction.type==='income'){
+        total+=transaction.amount;
+      }else{
+        total-=transaction.amount;
+      }
+      return total;
     },0)
 
     if(totalIncome<0){
