@@ -27,17 +27,23 @@ const transactionSchema=new mongoose.Schema({
         enum:[
             'Salary',
             'Freelance',
-            'Gifts',
             'Other Income',
             'Groceries',
-            'Rent',
+            'Housing',
             'Utilities',
             'Transportation',
             'Entertainment',
-            'Healthcare',
-            'Personal Care',
+            'Health',
             'Miscellaneous'
           ]
+        //   'Housing',
+            // 'Utilities',
+            // 'Groceries',
+            // 'Transportation',
+            // 'Health',
+            // 'Entertainment',
+            // 'Debt Repayment',
+            // 'Miscellaneous'
     }
 },{
     timestamps:true

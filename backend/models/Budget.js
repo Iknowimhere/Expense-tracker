@@ -27,9 +27,6 @@ const budgetSchema=new mongoose.Schema({
             'Transportation',
             'Health',
             'Entertainment',
-            'Clothing',
-            'Savings',
-            'Debt Repayment',
             'Miscellaneous'
           ]
     },

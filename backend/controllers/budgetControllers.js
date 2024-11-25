@@ -1,4 +1,5 @@
 import Budget from "../models/Budget.js";
+import Transaction from "../models/Transaction.js";
 
 const getBudget = async (req, res) => {
   try {
@@ -12,7 +13,27 @@ const getBudget = async (req, res) => {
 
 const postBudget = async (req, res) => {
     const { amount, category,endDate } = req.body;
+  let current=new Date();
+  let startDate=new Date(current.getFullYear(),current.getMonth(),current.getDate());
+  let end=new Date(current.getFullYear(),current.getMonth()+1,current.getDate());
+
   try {
+    let transactions = await Transaction.find({ user: req.user,date:{$gte:startDate,$lte:end} });  
+    if(transactions.length<0){
+      return res.status(400).json({ message: "No transactions found" });
+    }
+   
+    let totalIncome=transactions.reduce((total,transaction)=>{
+      total+=transaction.amount;
+    },0)
+
+    if(totalIncome<0){
+      totalIncome=0;
+    }
+    if(amount>totalIncome){
+      return res.status(400).json({ message: "Budget exceeded" });
+    }
+
     const budget = await Budget.create({
       user: req.user,
       amount,
