@@ -1,3 +1,4 @@
+import Budget from "../models/Budget.js";
 import Transaction from "../models/Transaction.js";
 
 const getTransactions=async (req,res,next)=>{
@@ -11,7 +12,37 @@ const getTransactions=async (req,res,next)=>{
 
 const postTransaction=async (req,res,next)=>{
     let {amount,category,type,description}=req.body
+    let currentDate=new Date()
+    //calculate start date and end date of the month
+    let startDate=new Date(currentDate.getFullYear(),currentDate.getMonth(),1);
+    let endDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0);
     try {
+        //finding budget of the user
+        let budget=await Budget.findOne({
+            user:req.user,
+            startDate,
+            endDate
+        })
+       
+        
+        if(!budget){
+            return res.status(400).json("Budget not found");
+        }
+        //check if amount is greater than budget for the type of transaction if it is expense
+        if(type==="expense"){
+            if(amount>budget.amount){
+                return res.status(400).json("Amount is greater than budget");
+            }
+        }
+        //if amount is less then the budget then update the budget by checking the category
+        if(type==="expense" && category===budget.category){
+            budget.amount-=amount
+        }else{
+            return res.status(400).json("Budget is not set for this category");
+        }
+
+        await budget.save()
+
         let newTransaction=new Transaction({
             user:req.user,
             amount,
