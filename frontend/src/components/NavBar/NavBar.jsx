@@ -18,7 +18,6 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
 function NavBar({ user, setUser }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);

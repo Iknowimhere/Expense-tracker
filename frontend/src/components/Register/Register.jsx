@@ -36,16 +36,23 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Register = () => {
+  let [message, setMessage] = useState('');
+  let [severity, setSeverity] = useState('');
   let [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  let [open, setOpen] = useState(false);
   let [loading, setLoading] = useState(false);
   let navigate = useNavigate();
 
-
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+  };
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -57,6 +64,8 @@ const Register = () => {
     let value = target.files[0];
     setFormData({ ...formData, photo: value });
   };
+  
+  
 
   const register = async () => {
     try {
@@ -71,13 +80,23 @@ const Register = () => {
         }
       );
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      navigate('/dashboard');
+      setMessage("Registration Successful");
+      setSeverity("success");
+      setOpen(true);
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+        // navigate('/dashboard');
+      }, 1000);
     } catch (error) {
-      console.log(error);
+      setMessage(error.response.data.message);
+      setSeverity("error");
+      setOpen(true);
     } finally {
       setLoading(false);
     }
   };
+
+
 
 
   return (
@@ -93,6 +112,9 @@ const Register = () => {
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }} variant="filled">{message}</Alert>
+    </Snackbar>
       <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
