@@ -25,16 +25,17 @@ const postBudget = async (req, res) => {
     if(transactions.length<0){
       return res.status(400).json({ message: "No transactions found" });
     }
-   
-    let totalIncome=transactions.reduce((total,transaction)=>{
-      if(transaction.type==='income'){
-        total+=transaction.amount;
+  
+    let totalIncome=0;
+    transactions.forEach((transaction)=>{
+      if(transaction.type==='Income'){
+        totalIncome+=transaction.amount;
       }else{
-        total-=transaction.amount;
+        totalIncome-=transaction.amount;
       }
-      return total;
-    },0)
+    })
 
+    
     if(totalIncome<0){
       totalIncome=0;
     }

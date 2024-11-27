@@ -34,23 +34,18 @@ const postTransaction = async (req, res, next) => {
       endDate,
     });
 
-    if (!budget) {
-      return res.status(400).json("Budget not found");
-    }
     //check if amount is greater than budget for the type of transaction if it is expense
     if (type === "expense") {
-      if (amount > budget.amount) {
+      if (amount > budget?.amount) {
         return res.status(400).json("Amount is greater than budget");
       }
     }
     //if amount is less then the budget then update the budget by checking the category
-    if (type === "expense" && category === budget.category) {
+    if (type === "expense" && category === budget?.category) {
       budget.amount -= amount;
-    } else {
-      return res.status(400).json("Budget is not set for this category");
-    }
+    } 
 
-    await budget.save();
+    await budget?.save();
 
     let newTransaction = new Transaction({
       user: req.user,

@@ -36,14 +36,6 @@ const transactionSchema=new mongoose.Schema({
             'Health',
             'Miscellaneous'
           ]
-        //   'Housing',
-            // 'Utilities',
-            // 'Groceries',
-            // 'Transportation',
-            // 'Health',
-            // 'Entertainment',
-            // 'Debt Repayment',
-            // 'Miscellaneous'
     }
 },{
     timestamps:true
