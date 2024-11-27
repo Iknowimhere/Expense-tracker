@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "../../axios";
+import { useSnackbar } from "notistack";
 
 import {
   Dialog,
@@ -24,6 +25,7 @@ const BudgetDialog = ({ open, handleClose, fetchBudgets, user }) => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+const {enqueueSnackbar}=useSnackbar();
 
   const handleChange = (e) => {
     setFormData({
@@ -35,7 +37,7 @@ const BudgetDialog = ({ open, handleClose, fetchBudgets, user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/budget", formData, {
+      let response=await axios.post("/budget", formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -43,10 +45,17 @@ const BudgetDialog = ({ open, handleClose, fetchBudgets, user }) => {
       handleClose();
       fetchBudgets();
       setFormData(initialFormData);
+      if(response.status===201){
+      enqueueSnackbar("Budget created successfully",{variant:"success"})
+      }
     } catch (error) {
-      console.error("Error creating budget:", error);
+      if(error.response && error.response.status === 400){
+        enqueueSnackbar(error.response.data.message,{variant:"error"})
+    }else{
+      enqueueSnackbar("An error occurred while creating the budget",{variant:"error"})
     }
   };
+}
 
   const categories = [
     "Housing",

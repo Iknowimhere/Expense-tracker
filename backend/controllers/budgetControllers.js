@@ -13,6 +13,9 @@ const getBudget = async (req, res) => {
 
 const postBudget = async (req, res) => {
     const { amount, category,endDate } = req.body;
+    if(!amount || !category || !endDate) {
+        return res.status(400).json({ message: "Please fill all fields" });
+    }
   let current=new Date();
   let startDate=new Date(current.getFullYear(),current.getMonth(),current.getDate());
   let end=new Date(current.getFullYear(),current.getMonth()+1,current.getDate());

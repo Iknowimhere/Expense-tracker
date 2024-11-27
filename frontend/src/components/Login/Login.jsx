@@ -8,6 +8,7 @@ import axios from "axios";
 import bg from "../../assets/bg.png";
 import instance from "../../axios";
 import { styled } from "@mui/material/styles";
+import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -46,6 +47,8 @@ const Login = () => {
   let [open, setOpen] = useState(false);
   let [loading, setLoading] = useState(false);
   let navigate = useNavigate();
+  let {enqueueSnackbar} = useSnackbar()
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -71,17 +74,21 @@ const Login = () => {
     try {
       let response=await axios.post(`${instance.defaults.baseURL}/user/login`,formData)
       localStorage.setItem('user',JSON.stringify(response.data.user))
-      setMessage("Login Successful")
-      setSeverity("success")
-      setOpen(true)
-      setTimeout(()=>{
-        // navigate('/dashboard')
-        window.location.href='/dashboard'
-      },1000)
+      // setMessage("Login Successful")
+      // setSeverity("success")
+      // setOpen(true)
+      // window.location.href='/dashboard'
+      if(response.status===200){
+        enqueueSnackbar("Login Successful", { variant: "success" });
+      }
+      navigate('/dashboard')
+      // enqueueSnackbar("Login Successful", { variant: "success" });
     } catch (error) {
-      setMessage(error.response.data.message)
-      setSeverity('error')
-      setOpen(true)
+      console.log(error);
+      if(error.response && error.response.status===400){
+        enqueueSnackbar("", { variant: "error" });
+      }
+      // enqueueSnackbar(error.response.data.message, { variant: "error" });
     }finally{
       setLoading(false)
     }
@@ -99,17 +106,6 @@ const Login = () => {
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
-    <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Login Successful"
-
-      >
-      <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }} variant="filled">
-      {message }
-      </Alert>
-      </Snackbar>
     <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
 
       <Box sx={{ width: '350px' }}>
