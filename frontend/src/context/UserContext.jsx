@@ -1,28 +1,17 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export let UserContext = createContext();
 
 export let UserProvider = ({ children }) => {
-  let [user, setUser] = useState(()=>{
-    let user = JSON.parse(localStorage.getItem("user"));
-    return user;
+  let [user, setUser] = useState(() => {
+    let user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   });
 
-  useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    
-    if (user) {
-      setUser(user);
-    }
-  }, []);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
 };
-
-// let UserState = () => {
-//   return useContext(UserContext);
-// };
-// export default UserState;

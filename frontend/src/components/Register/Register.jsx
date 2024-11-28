@@ -1,16 +1,18 @@
-import Alert from "@mui/material/Alert";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Input from "@mui/material/Input";
-import Snackbar from "@mui/material/Snackbar";
-import axios from "axios";
-import bg from "../../assets/bg.png";
-import instance from "../../axios";
-import { styled } from "@mui/material/styles";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Input from '@mui/material/Input';
+import Snackbar from '@mui/material/Snackbar';
+import axios from '../../axios';
+import bg from '../../assets/bg.png';
+import instance from '../../axios';
+import { styled } from '@mui/material/styles';
+import { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { UserContext } from '../../context/UserContext';
 
 import {
   Button,
@@ -36,8 +38,6 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Register = () => {
-  let [message, setMessage] = useState('');
-  let [severity, setSeverity] = useState('');
   let [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -47,6 +47,8 @@ const Register = () => {
   let [open, setOpen] = useState(false);
   let [loading, setLoading] = useState(false);
   let navigate = useNavigate();
+  let { enqueueSnackbar } = useSnackbar();
+  const { user, setUser } = useContext(UserContext);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -64,40 +66,33 @@ const Register = () => {
     let value = target.files[0];
     setFormData({ ...formData, photo: value });
   };
-  
-  
 
   const register = async () => {
     try {
       setLoading(true);
-      let response = await axios.post(
-        `${instance.defaults.baseURL}/user/register`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      let response = await axios.post(`/user/register`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      setMessage("Registration Successful");
-      setSeverity("success");
-      setOpen(true);
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-        // navigate('/dashboard');
-      }, 1000);
+      if (response.status === 201) {
+        setUser(response.data.user);
+        enqueueSnackbar('Registration successfull', { variant: 'success' });
+      }
+      navigate('/dashboard');
     } catch (error) {
-      setMessage(error.response.data.message);
-      setSeverity("error");
-      setOpen(true);
+      if (error.response.status === 400) {
+        enqueueSnackbar(error.response.data.message, { variant: 'error' });
+      } else {
+        enqueueSnackbar('Something went wrong,Try again later!', {
+          variant: 'error',
+        });
+      }
     } finally {
       setLoading(false);
     }
   };
-
-
-
 
   return (
     <Box
@@ -108,14 +103,21 @@ const Register = () => {
         display: 'flex',
         justifyContent: 'end',
         height: '100vh',
-        position:'relative',
+        position: 'relative',
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
-    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-    <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }} variant="filled">{message}</Alert>
-    </Snackbar>
-      <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
+      <Typography
+        variant='h3'
+        sx={{
+          position: 'absolute',
+          left: '10%',
+          top: '150px',
+          fontWeight: 'bolder',
+        }}
+      >
+        Welcome to Personal Budget Tracker
+      </Typography>
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
           Register
@@ -146,7 +148,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleForm}
               name='password'
-              type="password"
+              type='password'
             />
           </FormControl>
           <FormControl sx={{ marginBottom: '1em' }}>
@@ -156,7 +158,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleForm}
               name='confirmPassword'
-              type="password"
+              type='password'
             />
           </FormControl>
           <Button
@@ -184,7 +186,7 @@ const Register = () => {
               fullWidth
               onClick={register}
             >
-              {loading?<CircularProgress color="white"/>:"Signup"}
+              {loading ? <CircularProgress color='white' /> : 'Signup'}
             </Button>
           </ButtonGroup>
         </Stack>

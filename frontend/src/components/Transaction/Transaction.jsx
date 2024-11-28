@@ -1,9 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DescriptionIcon from "@mui/icons-material/Description";
+import CategoryIcon from "@mui/icons-material/Category";
 import React, { useContext, useEffect, useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import TransactionDialog from "./TransactionDialog";
@@ -20,7 +19,8 @@ import {
   Paper,
   Divider,
   ListItemIcon,
-  Stack
+  Stack,
+  Chip
 } from "@mui/material";
 
 const Transaction = () => {
@@ -96,11 +96,7 @@ const Transaction = () => {
                 <React.Fragment key={transaction._id}>
                   <ListItem sx={{ py: 2 }}>
                     <ListItemIcon>
-                      {transaction.type === "Expense" ? (
-                        <ArrowDownwardIcon color="error" />
-                      ) : (
-                        <ArrowUpwardIcon color="success" />
-                      )}
+                      <CategoryIcon color="primary" />
                     </ListItemIcon>
                     <ListItemText
                       primary={
@@ -109,6 +105,12 @@ const Transaction = () => {
                           <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
                             {transaction.description}
                           </Typography>
+                          <Chip
+                            label={transaction.category}
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                          />
                         </Stack>
                       }
                       secondary={
@@ -124,10 +126,10 @@ const Transaction = () => {
                       variant="body1"
                       sx={{
                         fontWeight: 'bold',
-                        color: transaction.type === "Expense" ? 'error.main' : 'success.main'
+                        color: 'primary.main'
                       }}
                     >
-                      {transaction.type === "Expense" ? "- " : "+ "} ₹{transaction.amount}
+                      ₹{transaction.amount}
                     </Typography>
                   </ListItem>
                   {index < transactions.length - 1 && <Divider />}

@@ -18,7 +18,6 @@ import {
 const TransactionDialog = ({ open, handleClose, fetchTransactions, user }) => {
   const initialFormData = {
     amount: '',
-    type: '',
     description: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
@@ -49,10 +48,15 @@ const TransactionDialog = ({ open, handleClose, fetchTransactions, user }) => {
     }
   };
 
-  const categories = {
-    Income: ['Salary', 'Freelance', 'Gifts', 'Other Income'],
-    Expense: ['Groceries', 'Rent', 'Utilities', 'Transportation', 'Entertainment', 'Healthcare', 'Personal Care', 'Miscellaneous']
-  };
+  const categories = [
+    'Housing',
+    'Utilities',
+    'Groceries',
+    'Transportation',
+    'Health',
+    'Entertainment',
+    'Miscellaneous'
+  ];
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -70,29 +74,14 @@ const TransactionDialog = ({ open, handleClose, fetchTransactions, user }) => {
           />
 
           <FormControl fullWidth required>
-            <InputLabel>Type</InputLabel>
-            <Select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              label="Type"
-              helperText={!formData.type && 'Please select a type'}
-            >
-              <MenuItem value="Income">Income</MenuItem>
-              <MenuItem value="Expense">Expense</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth required>
             <InputLabel>Category</InputLabel>
             <Select
               name="category"
               value={formData.category}
               onChange={handleChange}
               label="Category"
-              disabled={!formData.type}
             >
-              {formData.type && categories[formData.type].map((category) => (
+              {categories.map((category) => (
                 <MenuItem key={category} value={category}>
                   {category}
                 </MenuItem>

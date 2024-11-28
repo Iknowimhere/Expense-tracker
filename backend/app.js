@@ -1,10 +1,11 @@
-import budgetRoutes from "./routes/budgetRoutes.js";
-import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
-import transactionRoutes from "./routes/transactionRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import { connectDB } from "./config/db.js";
+import budgetRoutes from './routes/budgetRoutes.js';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import transactionRoutes from './routes/transactionRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import incomeRoutes from './routes/incomeRoutes.js';
+import { connectDB } from './config/db.js';
 
 dotenv.config();
 let app = express();
@@ -16,7 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoutes);
-app.use("/api/transaction",transactionRoutes)
-app.use("/api/budget",budgetRoutes)
+app.use('/api/transaction', transactionRoutes);
+app.use('/api/budget', budgetRoutes);
+app.use('/api/income', incomeRoutes);
 
 export default app;

@@ -13,9 +13,8 @@ const getTransactions = async (req, res, next) => {
 };
 
 const postTransaction = async (req, res, next) => {
-  let { amount, category, type, description } = req.body;
+  let { amount, category, description } = req.body;
   let currentDate = new Date();
-  //calculate start date and end date of the month
   let startDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -26,40 +25,59 @@ const postTransaction = async (req, res, next) => {
     currentDate.getMonth() + 1,
     0
   );
+
   try {
-    //finding budget of the user
-    let budget = await Budget.findOne({
+    // Find budget for this category
+    const categoryBudget = await Budget.findOne({
       user: req.user,
-      startDate,
-      endDate,
+      category,
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate },
     });
 
-    //check if amount is greater than budget for the type of transaction if it is expense
-    if (type === "expense") {
-      if (amount > budget?.amount) {
-        return res.status(400).json("Amount is greater than budget");
-      }
+    if (!categoryBudget) {
+      return res
+        .status(400)
+        .json({ message: 'No budget set for this category' });
     }
-    //if amount is less then the budget then update the budget by checking the category
-    if (type === "expense" && category === budget?.category) {
-      budget.amount -= amount;
-    } 
 
-    await budget?.save();
+    // Get existing transactions for this category in current period
+    const categoryTransactions = await Transaction.find({
+      user: req.user,
+      category,
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    const categoryTotal = categoryTransactions.reduce(
+      (sum, trans) => sum + trans.amount,
+      0
+    );
+
+    // Check if new transaction would exceed category budget
+    if (categoryTotal + amount > categoryBudget.amount) {
+      return res
+        .status(400)
+        .json({ message: `Transaction exceeds budget for ${category}` });
+    }
 
     let newTransaction = new Transaction({
       user: req.user,
       amount,
       category,
       description,
-      type,
     });
     await newTransaction.save();
+
+    // Update currentSpent in budget
+    categoryBudget.currentSpent = categoryTotal + amount;
+    await categoryBudget.save();
+
     res.status(201).json(newTransaction);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const updateTransaction = async (req, res, next) => {
   let { id } = req.params;

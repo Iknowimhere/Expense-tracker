@@ -1,0 +1,95 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: #1a1a1a;
+  padding: 2rem;
+}
+
+.glass-container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: #2d2d2d;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  color: #00ff9d;
+}
+
+.stat-trend {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.stat-trend.positive {
+  background: rgba(0, 255, 157, 0.2);
+  color: #00ff9d;
+}
+
+.stat-trend.negative {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.chart-card {
+  background: #2d2d2d;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.chart-card h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #00ff9d;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}

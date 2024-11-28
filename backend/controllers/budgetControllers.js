@@ -1,5 +1,5 @@
 import Budget from "../models/Budget.js";
-import Transaction from "../models/Transaction.js";
+import Income from "../models/Income.js";
 
 const getBudget = async (req, res) => {
   try {
@@ -12,48 +12,60 @@ const getBudget = async (req, res) => {
 
 
 const postBudget = async (req, res) => {
-    const { amount, category,endDate } = req.body;
-    if(!amount || !category || !endDate) {
-        return res.status(400).json({ message: "Please fill all fields" });
-    }
-  let current=new Date();
-  let startDate=new Date(current.getFullYear(),current.getMonth(),current.getDate());
-  let end=new Date(current.getFullYear(),current.getMonth()+1,current.getDate());
+  const { amount, category, endDate } = req.body;
+  if (!amount || !category || !endDate) {
+    return res.status(400).json({ message: 'Please fill all fields' });
+  }
+
+
+  let current = new Date();
+  let startDate = new Date(current.getFullYear(), current.getMonth(), 1);
+  let endOfMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0);
 
   try {
-    let transactions = await Transaction.find({ user: req.user,date:{$gte:startDate,$lte:end} });  
-    if(transactions.length<0){
-      return res.status(400).json({ message: "No transactions found" });
-    }
-  
-    let totalIncome=0;
-    transactions.forEach((transaction)=>{
-      if(transaction.type==='Income'){
-        totalIncome+=transaction.amount;
-      }else{
-        totalIncome-=transaction.amount;
-      }
-    })
+    // Get current month's income
+    const monthlyIncome = await Income.findOne({
+      user: req.user,
+      date: { $gte: startDate, $lte: endOfMonth },
+    });
 
-    
-    if(totalIncome<0){
-      totalIncome=0;
+    if (!monthlyIncome) {
+      return res.status(400).json({ message: 'Please add income first' });
     }
-    if(amount>totalIncome){
-      return res.status(400).json({ message: "Budget exceeded" });
+
+    // Get existing budgets for the month
+    const existingBudgets = await Budget.find({
+      user: req.user,
+      startDate: { $gte: startDate },
+      endDate: { $lte: endOfMonth },
+    });
+
+    // Calculate total allocated budget
+    const totalAllocatedBudget = existingBudgets.reduce(
+      (acc, curr) => acc + curr.amount,
+      0
+    );
+
+    // Check if new budget exceeds available income
+    if (totalAllocatedBudget + amount > monthlyIncome.amount) {
+      return res
+        .status(400)
+        .json({ message: 'Total budget cannot exceed monthly income' });
     }
 
     const budget = await Budget.create({
       user: req.user,
       amount,
       category,
-      endDate
+      endDate,
+      startDate,
     });
     res.status(201).json(budget);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const updateBudget = async (req, res) => {
   const { id } = req.params;

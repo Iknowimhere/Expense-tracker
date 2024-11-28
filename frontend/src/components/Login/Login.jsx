@@ -1,16 +1,16 @@
-import Box from "@mui/material/Box";
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import React, { useState } from "react";
-import Snackbar from "@mui/material/Snackbar";
-import axios from "axios";
-import bg from "../../assets/bg.png";
-import instance from "../../axios";
-import { styled } from "@mui/material/styles";
-import { useSnackbar } from "notistack";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import React, { useContext, useState } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import axios from '../../axios';
+import bg from '../../assets/bg.png';
+import { styled } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
 
 import {
   Alert,
@@ -38,30 +38,14 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Login = () => {
-  let [message, setMessage] = useState('');
-  let [severity, setSeverity] = useState('');
   let [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  let [open, setOpen] = useState(false);
+  let { user, setUser } = useContext(UserContext);
   let [loading, setLoading] = useState(false);
   let navigate = useNavigate();
-  let {enqueueSnackbar} = useSnackbar()
-
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-  
-    setOpen(false);
-  };
-  
-
-  
-
-
+  let { enqueueSnackbar } = useSnackbar();
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -69,30 +53,25 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const login=async ()=>{
-    setLoading(true)
+  const login = async () => {
+    setLoading(true);
     try {
-      let response=await axios.post(`${instance.defaults.baseURL}/user/login`,formData)
-      localStorage.setItem('user',JSON.stringify(response.data.user))
-      // setMessage("Login Successful")
-      // setSeverity("success")
-      // setOpen(true)
-      // window.location.href='/dashboard'
-      if(response.status===200){
-        enqueueSnackbar("Login Successful", { variant: "success" });
+      let response = await axios.post(`/user/login`, formData);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.status === 200) {
+        setUser(response.data.user);
+        enqueueSnackbar('Login Successful', { variant: 'success' });
       }
-      navigate('/dashboard')
-      // enqueueSnackbar("Login Successful", { variant: "success" });
+      navigate('/dashboard');
     } catch (error) {
       console.log(error);
-      if(error.response && error.response.status===400){
-        enqueueSnackbar("", { variant: "error" });
+      if (error.response && error.response.status === 400) {
+        enqueueSnackbar(error.response.data.message, { variant: 'error' });
       }
-      // enqueueSnackbar(error.response.data.message, { variant: "error" });
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
-  }
+  };
   return (
     <Box
       sx={{
@@ -102,11 +81,21 @@ const Login = () => {
         display: 'flex',
         justifyContent: 'end',
         height: '100vh',
-        position:'relative',
+        position: 'relative',
         background: `url(${bg}) no-repeat center left 20%/600px 700px`,
       }}
     >
-    <Typography variant='h3' sx={{position:'absolute',left:'10%',top:'150px',fontWeight:'bolder'}}>Welcome to Personal Budget Tracker</Typography>
+      <Typography
+        variant='h3'
+        sx={{
+          position: 'absolute',
+          left: '10%',
+          top: '150px',
+          fontWeight: 'bolder',
+        }}
+      >
+        Welcome to Personal Budget Tracker
+      </Typography>
 
       <Box sx={{ width: '350px' }}>
         <Typography variant='h4' marginBottom={'1em'}>
@@ -115,18 +104,34 @@ const Login = () => {
         <Stack>
           <FormControl sx={{ marginBottom: '1em' }}>
             <InputLabel htmlFor='email'>Email</InputLabel>
-            <Input id='email' value={formData.email} onChange={handleForm} name='email' />
+            <Input
+              id='email'
+              value={formData.email}
+              onChange={handleForm}
+              name='email'
+            />
           </FormControl>
           <FormControl sx={{ marginBottom: '1em' }}>
             <InputLabel htmlFor='password'>Password</InputLabel>
-            <Input id='password' value={formData.password} onChange={handleForm} name='password' type="password" />
+            <Input
+              id='password'
+              value={formData.password}
+              onChange={handleForm}
+              name='password'
+              type='password'
+            />
           </FormControl>
           <FormHelperText>
             Not Registered Yet? <Link to='/'>Please Register</Link>
           </FormHelperText>
           <ButtonGroup sx={{ display: 'flex', gap: '1em' }}>
-            <Button variant='contained' color='primary' fullWidth onClick={login}>
-              {loading ? <CircularProgress color="white"/> : 'Login'}
+            <Button
+              variant='contained'
+              color='primary'
+              fullWidth
+              onClick={login}
+            >
+              {loading ? <CircularProgress color='white' /> : 'Login'}
             </Button>
           </ButtonGroup>
         </Stack>
