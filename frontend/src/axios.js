@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let instance=axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://expense-tracker-3x4e.onrender.com/api',
 }); 
 
 export default instance;
