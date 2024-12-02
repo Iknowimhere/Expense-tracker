@@ -1,9 +1,8 @@
-import NavBar from '../NavBar/NavBar';
-import React, { useContext, useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
-import DashboardHome from './DashBoardhome';
-
+import DashboardHome from "./DashBoardHome";
+import NavBar from "../NavBar/NavBar";
+import React, { useContext, useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 
 const Dashboard = () => {
   let { user, setUser } = useContext(UserContext);
