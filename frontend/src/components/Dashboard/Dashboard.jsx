@@ -1,4 +1,4 @@
-import DashboardHome from "./DashBoardHome";
+import DashboardHome from "./DashboardHome";
 import NavBar from "../NavBar/NavBar";
 import React, { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
