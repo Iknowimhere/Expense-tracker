@@ -1,4 +1,4 @@
-import "./DashBoard.css";
+import "DashBoard.css";
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
 import { motion } from "framer-motion";
