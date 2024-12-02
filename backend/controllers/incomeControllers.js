@@ -1,6 +1,5 @@
 import Income from "../models/Income.js";
 
-
 export const postIncome=async(req,res)=>{
     let {amount,description,date}=req.body
     let currentDate=new Date()
@@ -16,7 +15,6 @@ export const postIncome=async(req,res)=>{
             let newIncome=await Income.create({
                 user:req.user,
                 amount,
-                category,
                 description,
                 date
             })
