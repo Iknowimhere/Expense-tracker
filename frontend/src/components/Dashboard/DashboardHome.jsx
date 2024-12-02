@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Pie, Bar } from 'react-chartjs-2';
-import { motion } from 'framer-motion';
-import axios from '../../axios';
+import "./DashBoard.css";
+import React, { useEffect, useState } from "react";
+import axios from "../../axios";
+import { motion } from "framer-motion";
+import { Bar, Pie } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -20,7 +22,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import './Dashboard.css';
 const DashboardHome = ({ user }) => {
   const [budgetData, setBudgetData] = useState([]);
   const [transactionData, setTransactionData] = useState([]);
